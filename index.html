@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exploring Our Worlds — Lesson Planner</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2333;
+    --border: #30363d;
+    --accent1: #f4a623;
+    --accent2: #58a6ff;
+    --accent3: #3fb950;
+    --accent4: #f78166;
+    --accent5: #bc8cff;
+    --text: #e6edf3;
+    --muted: #7d8590;
+    --phase1: #f4a623;
+    --phase2: #3fb950;
+    --phase3: #bc8cff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    font-size: 15px;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #0d1117 0%, #1a2035 50%, #0d1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 40px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(244,166,35,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: 10%;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(88,166,255,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-top {
+    display: flex; align-items: center; gap: 16px; margin-bottom: 8px;
+  }
+  .header-badge {
+    background: var(--accent1);
+    color: #000;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+  }
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.6rem;
+    font-weight: 900;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #f4a623 0%, #e6edf3 50%, #58a6ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .header-sub {
+    color: var(--muted);
+    font-size: 14px;
+    margin-top: 6px;
+    font-weight: 300;
+    letter-spacing: 0.3px;
+  }
+  .header-stats {
+    display: flex; gap: 24px; margin-top: 20px; flex-wrap: wrap;
+  }
+  .stat {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; color: var(--muted);
+  }
+  .stat strong { color: var(--text); }
+  .stat-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* LAYOUT */
+  .main { display: flex; height: calc(100vh - 160px); }
+  .sidebar {
+    width: 300px;
+    min-width: 300px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+  .content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 32px;
+    background: var(--bg);
+  }
+
+  /* SIDEBAR */
+  .sidebar-section {
+    padding: 16px 0 8px;
+  }
+  .sidebar-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 0 16px;
+    margin-bottom: 6px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sidebar-label::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+  .phase-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
+    padding: 8px 16px 4px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .lesson-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 9px 16px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+  }
+  .lesson-btn:hover { background: var(--surface2); color: var(--text); }
+  .lesson-btn.active { background: rgba(244,166,35,0.12); color: var(--text); border-left: 3px solid var(--accent1); }
+  .lesson-btn.active .lesson-num { background: var(--accent1); color: #000; }
+  .lesson-num {
+    width: 24px; height: 24px;
+    border-radius: 6px;
+    background: var(--surface2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .lesson-title { flex: 1; line-height: 1.3; }
+
+  /* SEARCH */
+  .search-wrap { padding: 12px; border-bottom: 1px solid var(--border); }
+  .search-input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    outline: none;
+  }
+  .search-input::placeholder { color: var(--muted); }
+  .search-input:focus { border-color: var(--accent1); }
+
+  /* LESSON CONTENT */
+  .lesson-header {
+    display: flex; align-items: flex-start; gap: 20px; margin-bottom: 28px;
+  }
+  .lesson-num-big {
+    width: 56px; height: 56px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 900;
+    flex-shrink: 0;
+  }
+  .lesson-header-text h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.9rem; font-weight: 700; line-height: 1.1;
+    margin-bottom: 6px;
+  }
+  .lesson-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .tag {
+    font-size: 12px; font-weight: 500;
+    padding: 3px 10px; border-radius: 20px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+  .tag.goal { border-color: var(--accent1); color: var(--accent1); }
+  .tag.cefr { border-color: var(--accent2); color: var(--accent2); }
+  .tag.phase { border-color: var(--accent3); color: var(--accent3); }
+
+  /* TIMELINE */
+  .timeline {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+  .timeline-step {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+  .timeline-step::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  }
+  .step-warmup::before { background: var(--accent1); }
+  .step-present::before { background: var(--accent2); }
+  .step-practice::before { background: var(--accent3); }
+  .step-produce::before { background: var(--accent4); }
+  .step-reflect::before { background: var(--accent5); }
+  .timeline-step .step-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .step-warmup .step-label { color: var(--accent1); }
+  .step-present .step-label { color: var(--accent2); }
+  .step-practice .step-label { color: var(--accent3); }
+  .step-produce .step-label { color: var(--accent4); }
+  .step-reflect .step-label { color: var(--accent5); }
+  .timeline-step .step-time { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+  .timeline-step .step-desc { font-size: 12px; color: var(--text); line-height: 1.5; }
+
+  /* SECTIONS */
+  .section-title {
+    font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* RESOURCES GRID */
+  .resources-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px; margin-bottom: 32px;
+  }
+  .resource-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    text-decoration: none;
+    color: var(--text);
+    display: flex; flex-direction: column; gap: 8px;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .resource-card:hover {
+    border-color: var(--accent1);
+    background: var(--surface2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+  .resource-card:hover .resource-icon { transform: scale(1.1); }
+  .resource-icon { font-size: 26px; transition: transform 0.2s; }
+  .resource-type {
+    font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .resource-name { font-size: 13px; font-weight: 600; line-height: 1.3; }
+  .resource-desc { font-size: 12px; color: var(--muted); line-height: 1.4; }
+  .resource-link {
+    font-size: 11px; color: var(--accent2);
+    margin-top: auto; display: flex; align-items: center; gap: 4px;
+  }
+
+  /* FLASHCARD MINI */
+  .flashcard-preview {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 32px;
+  }
+  .flashcard-grid {
+    display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px;
+  }
+  .flashcard {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 8px;
+    position: relative;
+  }
+  .flashcard:hover { background: var(--accent1); color: #000; border-color: var(--accent1); }
+  .flashcard .az { font-size: 10px; color: var(--muted); display: block; }
+  .flashcard:hover .az { color: rgba(0,0,0,0.6); }
+
+  /* ACTIVITY IDEAS */
+  .activities { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
+  .activity-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex; align-items: flex-start; gap: 12px;
+  }
+  .activity-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .activity-name { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+  .activity-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  /* HOMEWORK SECTION */
+  .homework-box {
+    background: linear-gradient(135deg, rgba(244,166,35,0.08), rgba(88,166,255,0.05));
+    border: 1px solid rgba(244,166,35,0.3);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 32px;
+  }
+  .homework-box h4 { font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--accent1); }
+  .homework-box p { font-size: 13px; color: var(--text); line-height: 1.6; }
+
+  /* WELCOME SCREEN */
+  .welcome {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    height: 100%; text-align: center; padding: 40px;
+  }
+  .welcome-emoji { font-size: 64px; margin-bottom: 20px; }
+  .welcome h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; margin-bottom: 12px;
+    background: linear-gradient(135deg, var(--accent1), var(--text));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .welcome p { color: var(--muted); max-width: 400px; line-height: 1.6; font-size: 14px; }
+  .phase-cards { display: flex; gap: 16px; margin-top: 32px; flex-wrap: wrap; justify-content: center; }
+  .phase-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 22px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    width: 180px;
+  }
+  .phase-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,0.4); }
+  .phase-card .pc-num { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+  .phase-card .pc-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .phase-card .pc-range { font-size: 12px; color: var(--muted); }
+
+  /* NOTES */
+  .notes-area {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    resize: vertical;
+    min-height: 80px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .notes-area:focus { border-color: var(--accent1); }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* PHASE COLORS */
+  .p1 { color: var(--phase1); }
+  .p2 { color: var(--phase2); }
+  .p3 { color: var(--phase3); }
+  .bg-p1 { background: rgba(244,166,35,0.15); color: var(--phase1); }
+  .bg-p2 { background: rgba(63,185,80,0.15); color: var(--phase2); }
+  .bg-p3 { background: rgba(188,140,255,0.15); color: var(--phase3); }
+
+  @media (max-width: 900px) {
+    .main { flex-direction: column; height: auto; }
+    .sidebar { width: 100%; min-width: unset; max-height: 280px; }
+    .timeline { grid-template-columns: repeat(2, 1fr); }
+    .header h1 { font-size: 1.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <span class="header-badge">🇦🇿 Baku · CEFR A1–A2</span>
+  </div>
+  <h1>Exploring Our Worlds</h1>
+  <div class="header-sub">30-Lesson English Curriculum · Ages 7–12 · Teacher Lesson Planner</div>
+  <div class="header-stats">
+    <div class="stat"><span class="stat-dot" style="background:var(--phase1)"></span> <strong>Phase 1</strong> Me & My People (L1–10)</div>
+    <div class="stat"><span class="stat-dot" style="background:var(--phase2)"></span> <strong>Phase 2</strong> Azerbaijani Traditions (L11–20)</div>
+    <div class="stat"><span class="stat-dot" style="background:var(--phase3)"></span> <strong>Phase 3</strong> Imagination & Stories (L21–30)</div>
+    <div class="stat">⏱ <strong>60 min</strong> per lesson</div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="sidebar">
+    <div class="search-wrap">
+      <input class="search-input" type="text" placeholder="🔍  Search lessons..." id="searchInput" oninput="filterLessons()" />
+    </div>
+    <div id="lessonList"></div>
+  </div>
+  <div class="content" id="mainContent">
+    <!-- Welcome -->
+    <div class="welcome" id="welcomeScreen">
+      <div class="welcome-emoji">📚</div>
+      <h2>Welcome, Teacher!</h2>
+      <p>Select any lesson from the sidebar to view your full lesson plan, teaching resources, flashcards, and activity ideas.</p>
+      <div class="phase-cards">
+        <div class="phase-card" onclick="loadLesson(0)" style="border-color:rgba(244,166,35,0.4)">
+          <div class="pc-num p1">Phase 1</div>
+          <div class="pc-title">Me & My People</div>
+          <div class="pc-range">Lessons 1–10</div>
+        </div>
+        <div class="phase-card" onclick="loadLesson(10)" style="border-color:rgba(63,185,80,0.4)">
+          <div class="pc-num p2">Phase 2</div>
+          <div class="pc-title">Traditions</div>
+          <div class="pc-range">Lessons 11–20</div>
+        </div>
+        <div class="phase-card" onclick="loadLesson(20)" style="border-color:rgba(188,140,255,0.4)">
+          <div class="pc-num p3">Phase 3</div>
+          <div class="pc-title">Imagination</div>
+          <div class="pc-range">Lessons 21–30</div>
+        </div>
+      </div>
+    </div>
+    <div id="lessonContent" style="display:none"></div>
+  </div>
+</div>
+
+<script>
+const lessons = [
+  // PHASE 1
+  {
+    id:1, phase:1, title:"My Name, My World", goal:"be verb, introductions",
+    production:"Memory visualization; family story; name interview; self-portrait",
+    homework:"Ask family members: 'What is your name?' Write 3 names in your notebook.",
+    flashcards:[
+      {en:"I am", az:"Mən"},
+      {en:"My name is", az:"Mənim adım"},
+      {en:"Hello", az:"Salam"},
+      {en:"Nice to meet you", az:"Tanış olduğuma şadam"},
+      {en:"How are you?", az:"Necəsən?"},
+      {en:"I'm fine", az:"Yaxşıyam"},
+      {en:"What is your name?", az:"Adın nədir?"},
+      {en:"I'm from Baku", az:"Mən Bakıdanam"},
+    ],
+    resources:[
+      {icon:"🃏", type:"Flashcard App", name:"Quizlet – Introductions Set", desc:"Pre-made A1 introductions vocab deck", url:"https://quizlet.com/subject/english-introductions/"},
+      {icon:"🎬", type:"Video", name:"Hello Song for Kids", desc:"Sing-along intro song (YouTube)", url:"https://www.youtube.com/results?search_query=hello+my+name+is+song+for+kids"},
+      {icon:"🖨️", type:"Printable", name:"Name Badge Template", desc:"Students decorate their own name card", url:"https://www.twinkl.com/search?q=name+badge"},
+      {icon:"🎮", type:"Game", name:"Name Ball Game", desc:"Toss a ball, say your name – classic warmup", url:"#"},
+      {icon:"📝", type:"Worksheet", name:"Self-Portrait + Name Sheet", desc:"Draw yourself and fill in 'My name is ___'", url:"https://www.eslkidstuff.com/lesson-plans/my-name.html"},
+      {icon:"🎵", type:"Song", name:"'Hello, My Name Is' Chant", desc:"Rhythm chant for drilling the be verb", url:"https://www.youtube.com/results?search_query=hello+my+name+is+ESL+chant"},
+    ],
+    activities:[
+      {icon:"🎯", name:"Human Bank Account Visualization", desc:"Students close their eyes and think of their happiest memory linked to their name. Teacher shares a short story about a child introducing themselves."},
+      {icon:"🤝", name:"Name Interview Circle", desc:"Students walk around asking 3 classmates 'What is your name?' and write answers."},
+      {icon:"🖼️", name:"Self-Portrait Gallery", desc:"Draw and label your self-portrait: 'My name is ___, I am ___ years old, I am from ___."},
+    ]
+  },
+  {
+    id:2, phase:1, title:"My Family", goal:"possessive adjectives",
+    production:"Family poem; family tree drawing",
+    homework:"Draw your family tree and label each person in English.",
+    flashcards:[
+      {en:"My mother", az:"Mənim anam"},
+      {en:"My father", az:"Mənim atam"},
+      {en:"My sister", az:"Bacım"},
+      {en:"My brother", az:"Qardaşım"},
+      {en:"My grandmother", az:"Nənəm"},
+      {en:"My grandfather", az:"Babam"},
+      {en:"My family", az:"Ailəm"},
+      {en:"His / Her", az:"Onun"},
+    ],
+    resources:[
+      {icon:"🃏", type:"Flashcard App", name:"Family Members Quizlet", desc:"Family vocabulary flashcard deck", url:"https://quizlet.com/subject/family-members-english/"},
+      {icon:"🎬", type:"Video", name:"My Family Song – Super Simple", desc:"Catchy family song for young learners", url:"https://www.youtube.com/results?search_query=my+family+song+super+simple+songs"},
+      {icon:"🖨️", type:"Printable", name:"Family Tree Template", desc:"Blank family tree to fill in", url:"https://www.twinkl.com/search?q=family+tree+template"},
+      {icon:"📝", type:"Worksheet", name:"Possessive Adjectives WS", desc:"My/your/his/her practice worksheet", url:"https://www.eslkidstuff.com/lesson-plans/family.html"},
+      {icon:"🎮", type:"Game", name:"Whose family is it?", desc:"Show picture cards, students say 'his mother' or 'her sister'", url:"#"},
+      {icon:"📖", type:"Story", name:"'The Very Hungry Caterpillar' family adaptation", desc:"Use as a model for simple family sentences", url:"#"},
+    ],
+    activities:[
+      {icon:"🌳", name:"Family Tree Creation", desc:"Students draw and label their family tree, then present to a partner: 'This is my mother. Her name is...'"},
+      {icon:"📜", name:"Family Poem", desc:"Guided poem: 'My mother is kind. My father is tall. My family is the best of all!'"},
+      {icon:"🔍", name:"Information Gap", desc:"Student A has half the family info, Student B has the other half. They ask questions to complete the picture."},
+    ]
+  },
+  {
+    id:3, phase:1, title:"My Friends", goal:"describing people",
+    production:"Friendship poster; pair information gap",
+    homework:"Write 3 sentences about your best friend. Draw their portrait.",
+    flashcards:[
+      {en:"Tall / Short", az:"Uzun / Qısa"},
+      {en:"Funny / Shy", az:"Şən / Utancaq"},
+      {en:"Kind / Smart", az:"Mehriban / Ağıllı"},
+      {en:"My best friend", az:"Ən yaxşı dostuм"},
+      {en:"He/She has", az:"Onun var"},
+      {en:"Brown eyes", az:"Qəhvəyi gözlər"},
+      {en:"Black hair", az:"Qara saçlar"},
+      {en:"We like to", az:"Biz sevirik"},
+    ],
+    resources:[
+      {icon:"🃏", type:"Flashcard App", name:"Adjectives Quizlet – People", desc:"Describing people vocabulary deck", url:"https://quizlet.com/subject/describing-people/"},
+      {icon:"🎬", type:"Video", name:"Describing People – ESL Kids", desc:"Short video on physical descriptions", url:"https://www.youtube.com/results?search_query=describing+people+ESL+kids"},
+      {icon:"🖨️", type:"Printable", name:"Guess Who Worksheet", desc:"'My friend has ___ hair and ___ eyes. Who is it?'", url:"https://www.twinkl.com/search?q=guess+who+ESL"},
+      {icon:"🎮", type:"Game", name:"Mystery Friend", desc:"One student describes a classmate, others guess who it is", url:"#"},
+      {icon:"📝", type:"Worksheet", name:"Friendship Poster Template", desc:"Decorate and describe your best friend", url:"#"},
+      {icon:"✂️", type:"Craft", name:"Paper Doll Friends", desc:"Cut out and customize paper friends", url:"#"},
+    ],
+    activities:[
+      {icon:"🎭", name:"Mystery Friend Game", desc:"Teacher describes a student, class guesses: 'My friend is tall. She has long black hair. She is very funny.'"},
+      {icon:"🖼️", name:"Friendship Poster", desc:"Draw your best friend and write 5 describing sentences around the picture."},
+      {icon:"🔄", name:"Information Gap Pair Work", desc:"Each student has a different friend card. They describe without showing: 'My friend has blue eyes...'"},
+    ]
+  },
+  {
+    id:4, phase:1, title:"My Classroom", goal:"classroom vocabulary",
+    production:"Treasure hunt; classroom map drawing",
+    homework:"Draw your classroom at home and label 10 objects in English.",
+    flashcards:[
+      {en:"Chair", az:"Stul"},
+      {en:"Desk / Table", az:"Masa"},
+      {en:"Blackboard", az:"Lövhə"},
+      {en:"Pencil", az:"Karandaş"},
+      {en:"Ruler", az:"Xətkeş"},
+      {en:"Bag / Backpack", az:"Çanta"},
+      {en:"Book", az:"Kitab"},
+      {en:"Window", az:"Pəncərə"},
+      {en:"Door", az:"Qapı"},
+      {en:"Where is the...?", az:"... haradadır?"},
+    ],
+    resources:[
+      {icon:"🃏", type:"Flashcard App", name:"Classroom Objects – Quizlet", desc:"Interactive classroom vocab deck", url:"https://quizlet.com/subject/classroom-objects/"},
+      {icon:"🎬", type:"Video", name:"In the Classroom Song", desc:"Song for classroom vocabulary", url:"https://www.youtube.com/results?search_query=classroom+objects+song+kids"},
+      {icon:"🖨️", type:"Printable", name:"Classroom Label-and-Match", desc:"Label classroom objects worksheet", url:"https://www.eslkidstuff.com/lesson-plans/classroom.html"},
+      {icon:"🗺️", type:"Activity", name:"Treasure Hunt Cards", desc:"Printable treasure hunt clue cards", url:"#"},
+      {icon:"🎮", type:"Game", name:"What's Missing?", desc:"Place objects on desk, remove one, students guess", url:"#"},
+      {icon:"📏", type:"Craft", name:"Classroom Map Drawing", desc:"Grid paper + labels activity", url:"#"},
+    ],
+    activities:[
+      {icon:"🗺️", name:"Classroom Treasure Hunt", desc:"Hide word cards around the classroom. Students find them and say the word aloud before collecting."},
+      {icon:"👀", name:"What's Missing?", desc:"Display 8 objects on the desk. Students close eyes, remove one. 'The pencil is missing!'"},
+      {icon:"✏️", name:"Draw & Label Map", desc:"Students draw a bird's-eye view of the classroom and label every object they know."},
+    ]
+  },
+  {
+    id:5, phase:1, title:"My Favorite Things", goal:"likes and dislikes",
+    production:"Show-and-tell; favorite objects booklet",
+    homework:"Tell a family member 3 things you like and 1 thing you don't like in English.",
+    flashcards:[
+      {en:"I like", az:"Mən sevirəm"},
+      {en:"I don't like", az:"Mən sevmirəm"},
+      {en:"I love", az:"Mən çox sevirəm"},
+      {en:"My favorite", az:"Sevimli"},
+      {en:"Football", az:"Futbol"},
+      {en:"Music", az:"Musiqi"},
+      {en:"Reading", az:"Oxumaq"},
+      {en:"Drawing", az:"Çizmək"},
+      {en:"Cats / Dogs", az:"Pişiklər / İtlər"},
+      {en:"Do you like...?", az:"...sevırsən?"},
+    ],
+    resources:[
+      {icon:"🃏", type:"Flashcard App", name:"Likes & Dislikes – Quizlet", desc:"Hobbies and preferences vocabulary", url:"https://quizlet.com/subject/likes-and-dislikes/"},
+      {icon:"🎬", type:"Video", name:"Do You Like Broccoli? Song", desc:"Super Simple Songs – likes/dislikes", url:"https://www.youtube.com/results?search_query=do+you+like+broccoli+super+simple+songs"},
+      {icon:"🖨️", type:"Printable", name:"Like / Don't Like Sort", desc:"Cut and sort activity", url:"https://www.twinkl.com/search?q=likes+dislikes+ESL"},
+      {icon:"📓", type:"Craft", name:"Mini Favorites Booklet", desc:"Fold A4 paper into 8-page mini book", url:"#"},
+      {icon:"🎮", type:"Game", name:"Thumbs Up / Down Game", desc:"Teacher names things, students show thumbs", url:"#"},
+      {icon:"📊", type:"Activity", name:"Class Survey Chart", desc:"Tally chart: 'Who likes football?'", url:"#"},
+    ],
+    activities:[
+      {icon:"👍", name:"Thumbs Up / Thumbs Down", desc:"Teacher calls out items. Students respond with thumbs up (I like!) or thumbs down (I don't like!). Speed round at the end."},
+      {icon:"📖", name:"Show and Tell", desc:"Students bring (or draw) their favorite object and say: 'This is my ___, I like it because...'"},
+      {icon:"📊", name:"Class Survey", desc:"Ask 5 classmates 'Do you like ___?' Fill in a tally chart, then report results."},
+    ]
+  },
+  {
+    id:6, phase:1, title:"My Pet or Dream Pet", goal:"animal descriptions",
+    production:"Animal story; pet poster",
+    homework:"Draw your pet or dream pet and write 4 sentences about it.",
+    flashcards:[
+      {en:"Dog", az:"It"},
+      {en:"Cat", az:"Pişik"},
+      {en:"Fish", az:"Balıq"},
+      {en:"Bird", az:"Quş"},
+      {en:"Rabbit", az:"Dovşan"},
+      {en:"It is big / small", az:"O böyükdür / kiçikdir"},
+      {en:"It has fur / scales", az:"Onun tükü / pulcuğu var"},
+      {en:"It can swim / fly", az:"O üzə / uça bilir"},
+      {en:"I have a pet", az:"Mənim ev heyvanım var"},
+    ],
+    resources:[
+      {icon:"🃏", type:"Flashcard App", name:"Animals Quizlet Deck", desc:"Common animals A1 vocabulary", url:"https://quizlet.com/subject/animals-english/"},
+      {icon:"🎬", type:"Video", name:"What's Your Pet? Song", desc:"Catchy ESL animal/pet song", url:"https://www.youtube.com/results?search_query=what+is+your+pet+ESL+kids+song"},
+      {icon:"🖨️", type:"Printable", name:"My Dream Pet Sheet", desc:"Draw and describe your dream pet", url:"https://www.twinkl.com/search?q=pet+ESL+worksheet"},
+      {icon:"📖", type:"Story", name:"'Where's Spot?' adapted", desc:"Simple book with pet vocabulary", url:"#"},
+      {icon:"🎮", type:"Game", name:"Animal Sounds Quiz", desc:"Play an animal sound, students name it", url:"#"},
+      {icon:"✂️", type:"Craft", name:"Pet Poster Project", desc:"Collage/drawing poster with labels", url:"#"},
+    ],
+    activities:[
+      {icon:"🔊", name:"Animal Sounds Quiz", desc:"Play animal sounds on your device. Students race to name the animal and spell it."},
+      {icon:"📖", name:"Pet Story Telling", desc:"Teacher tells a story: 'I have a dream pet. It is a dragon! It is red and big. It can fly!'  Students create their own version."},
+      {icon:"🖼️", name:"Dream Pet Poster", desc:"Draw your dream pet and add speech bubbles with descriptions. Share with the class."},
+    ]
+  },
+  {
+    id:7, phase:1, title:"My Daily Feelings", goal:"emotion vocabulary",
+    production:"Emotion cards; feelings diary",
+    homework:"Write how you feel each day for 3 days: 'On Monday I was...'",
+    flashcards:[
+      {en:"Happy 😊", az:"Xoşbəxt"},
+      {en:"Sad 😢", az:"Kədərli"},
+      {en:"Angry 😠", az:"Hirslı"},
+      {en:"Scared 😨", az:"Qorxmuş"},
+      {en:"Excited 🤩", az:"Həyəcanlı"},
+      {en:"Tired 😴", az:"Yorğun"},
+      {en:"Bored 😑", az:"Cansıxıcı"},
+      {en:"Surprised 😲", az:"Təəccüblü"},
+      {en:"I feel...", az:"Mən hiss edirəm..."},
+      {en:"Today I am...", az:"Bu gün mən ...əm"},
+    ],
+    resources:[
+      {icon:"🃏", type:"Flashcard App", name:"Emotions Quizlet Set", desc:"Feelings & emotions for young learners", url:"https://quizlet.com/subject/feelings-emotions-english/"},
+      {icon:"🎬", type:"Video", name:"How Are You Feeling Today?", desc:"Emotions song with facial expressions", url:"https://www.youtube.com/results?search_query=how+are+you+feeling+today+ESL+kids"},
+      {icon:"🖨️", type:"Printable", name:"Feelings Faces Flashcards", desc:"Print-and-cut emotion face cards", url:"https://www.twinkl.com/search?q=feelings+flashcards"},
+      {icon:"📔", type:"Craft", name:"Feelings Diary Template", desc:"Weekly diary with emotion tracker", url:"#"},
+      {icon:"🎭", type:"Game", name:"Emotion Charades", desc:"Act out an emotion, class guesses", url:"#"},
+      {icon:"🌡️", type:"Activity", name:"Feelings Thermometer", desc:"Visual scale from 1-10 for emotions", url:"#"},
+    ],
+    activities:[
+      {icon:"🎭", name:"Emotion Charades", desc:"Students take an emotion card and act it out in front of the class. No words allowed!"},
+      {icon:"🗣️", name:"Feelings Circle", desc:"Morning circle: each student places a peg or sticker on the 'Feelings Board' showing their mood."},
+      {icon:"📔", name:"Feelings Diary", desc:"Students write/draw 3 diary entries: 'On Monday I felt happy because...' Teacher models first."},
+    ]
+  },
+  {
+    id:8, phase:1, title:"My Home", goal:"rooms and objects",
+    production:"House story; draw and label home",
+    homework:"Interview a family member: 'What room do you like best?' Write their answer.",
+    flashcards:[
+      {en:"Kitchen", az:"Mətbəx"},
+      {en:"Bedroom", az:"Yataq otağı"},
+      {en:"Bathroom", az:"Hamam"},
+      {en:"Living room", az:"Qonaq otağı"},
+      {en:"Garden / Yard", az:"Bağça / Həyət"},
+      {en:"Sofa", az:"Divan"},
+      {en:"Fridge", az:"Soyuducu"},
+      {en:"Bed", az:"Çarpayı"},
+      {en:"In / On / Under", az:"Içində / Üstündə / Altında"},
+      {en:"There is a...", az:"Bir ... var"},
+    ],
+    resources:[
+      {icon:"🃏", type:"Flashcard App", name:"Rooms & Furniture Quizlet", desc:"Home vocabulary flashcard set", url:"https://quizlet.com/subject/rooms-house-english/"},
+      {icon:"🎬", type:"Video", name:"This is My House Song", desc:"Rooms of the house song for kids", url:"https://www.youtube.com/results?search_query=rooms+of+the+house+song+ESL+kids"},
+      {icon:"🏠", type:"Interactive", name:"Toy Theatre House", desc:"Click-through virtual dollhouse", url:"https://toytheater.com/dollhouse/"},
+      {icon:"🖨️", type:"Printable", name:"Floor Plan Worksheet", desc:"Label the rooms in a house blueprint", url:"https://www.twinkl.com/search?q=rooms+house+ESL+worksheet"},
+      {icon:"🎮", type:"Game", name:"Prepositions Game", desc:"Put toy IN/ON/UNDER box – Simon Says style", url:"#"},
+      {icon:"✂️", type:"Craft", name:"Dream House Collage", desc:"Cut magazine pictures, make your dream house", url:"#"},
+    ],
+    activities:[
+      {icon:"🏠", name:"Dream House Design", desc:"Students get a blank floor plan template. They draw rooms and furniture, then describe: 'In my house there is a big kitchen.'"},
+      {icon:"🎲", name:"Prepositions Simon Says", desc:"Using a toy and a box: 'Put the cat ON the box! PUT it UNDER the box!' Students follow commands."},
+      {icon:"📖", name:"House Story", desc:"Teacher tells a story about a magical house. Students listen and draw what they hear. Then retell together."},
+    ]
+  },
+  {
+    id:9, phase:1, title:"People Around Me", goal:"review & speaking",
+    production:"Interview carousel; mini-project",
+    homework:"Complete your 'People Around Me' card – one person from home, one from school.",
+    flashcards:[
+      {en:"My teacher", az:"Müəllimim"},
+      {en:"My neighbor", az:"Qonşum"},
+      {en:"My doctor", az:"Həkim"},
+      {en:"My friend", az:"Dostum"},
+      {en:"What do you do?", az:"Sən nə edirsən?"},
+      {en:"How old are you?", az:"Neçə yaşın var?"},
+      {en:"Where do you live?", az:"Harada yaşayırsan?"},
+      {en:"He/She works at...", az:"O...da işləyir"},
+    ],
+    resources:[
+      {icon:"🃏", type:"Flashcard App", name:"Community Helpers Quizlet", desc:"Jobs and community vocabulary", url:"https://quizlet.com/subject/community-helpers/"},
+      {icon:"🎬", type:"Video", name:"People in My Neighborhood", desc:"Community helpers song", url:"https://www.youtube.com/results?search_query=people+in+the+neighborhood+ESL+kids"},
+      {icon:"🖨️", type:"Printable", name:"Interview Cards", desc:"Question prompt cards for carousel", url:"#"},
+      {icon:"🎮", type:"Game", name:"People Bingo", desc:"Bingo card with people descriptions", url:"#"},
+      {icon:"📝", type:"Activity", name:"Mini-Book: My Community", desc:"8-page foldable about local people", url:"#"},
+    ],
+    activities:[
+      {icon:"🔄", name:"Interview Carousel", desc:"Students rotate every 2 minutes, interviewing classmates. They fill in a grid with names and info gathered."},
+      {icon:"🎙️", name:"Spotlight Sharing", desc:"Volunteers share one interesting fact they learned about a classmate from the carousel."},
+      {icon:"📁", name:"Mini-Project", desc:"Create a 'My People' card with drawings/photos and 3 sentences for each person."},
+    ]
+  },
+  {
+    id:10, phase:1, title:"Celebration Project", goal:"unit review & portfolio",
+    production:"'Me and My People' portfolio showcase",
+    homework:"Decorate your portfolio cover and write a dedication to your family.",
+    flashcards:[
+      {en:"I can say...", az:"Mən deyə bilərəm..."},
+      {en:"I learned...", az:"Mən öyrəndim..."},
+      {en:"My favorite lesson was", az:"Ən sevimli dərsim"},
+      {en:"I am proud of", az:"Mən fəxr edirəm"},
+      {en:"Well done!", az:"Əla!"},
+      {en:"I want to learn more about", az:"Daha çox öyrənmək istəyirəm"},
+    ],
+    resources:[
+      {icon:"📁", type:"Template", name:"Portfolio Cover Template", desc:"Printable illustrated portfolio cover", url:"https://www.twinkl.com/search?q=portfolio+cover+template"},
+      {icon:"🌟", type:"Activity", name:"Star of the Week Certificates", desc:"Print achievement certificates", url:"https://www.twinkl.com/search?q=star+certificates"},
+      {icon:"🎬", type:"Video", name:"Class Presentation Tips", desc:"Simple tips for presenting to class", url:"#"},
+      {icon:"🎤", type:"Activity", name:"Gallery Walk", desc:"Display work on desks, class walks around", url:"#"},
+      {icon:"📸", type:"Activity", name:"Class Photo Moment", desc:"Document the finished portfolios", url:"#"},
+    ],
+    activities:[
+      {icon:"🖼️", name:"Gallery Walk", desc:"All portfolios displayed on desks. Students walk around with sticky notes to leave a positive comment on classmates' work."},
+      {icon:"🎤", name:"Mini Presentations", desc:"Each student has 60 seconds to present one item from their portfolio to the class."},
+      {icon:"🌟", name:"Certificate Ceremony", desc:"Teacher hands out 'Phase 1 Complete' certificates. Students share one thing they learned this unit."},
+    ]
+  },
+  // PHASE 2
+  {
+    id:11, phase:2, title:"Novruz Begins", goal:"traditions vocabulary",
+    production:"Novruz story; matching activity",
+    homework:"Ask a family member about one Novruz tradition and write it in English.",
+    flashcards:[
+      {en:"Novruz", az:"Novruz"},
+      {en:"Spring", az:"Yaz"},
+      {en:"Fire", az:"Od"},
+      {en:"Jump over the fire", az:"Odun üstündən atlamaq"},
+      {en:"Celebrate", az:"Bayram etmək"},
+      {en:"New Year", az:"Yeni il"},
+      {en:"Tradition", az:"Ənənə"},
+      {en:"Family gathering", az:"Ailə yığıncağı"},
+      {en:"We celebrate Novruz in March", az:"Biz martta Novruz keçiririk"},
+    ],
+    resources:[
+      {icon:"🃏", type:"Flashcard App", name:"Novruz Vocabulary Set", desc:"Custom Novruz traditions flashcards", url:"https://quizlet.com/search?query=novruz&type=sets"},
+      {icon:"🎬", type:"Video", name:"Novruz in Azerbaijan", desc:"Short documentary-style video for kids", url:"https://www.youtube.com/results?search_query=Novruz+Azerbaijan+for+kids"},
+      {icon:"🖨️", type:"Printable", name:"Novruz Word Match", desc:"Match Novruz words to pictures", url:"#"},
+      {icon:"✂️", type:"Craft", name:"Paper Semeni Craft", desc:"Make green semeni wheat from paper", url:"#"},
+      {icon:"📖", type:"Story", name:"The Story of Novruz", desc:"Simple graded reader about the holiday", url:"#"},
+      {icon:"🎮", type:"Game", name:"Novruz Quiz", desc:"True/False quiz about traditions", url:"#"},
+    ],
+    activities:[
+      {icon:"🔥", name:"Jump the Fire (Mime)", desc:"Students mime jumping over the fire while saying 'My sadness goes, my happiness comes!' – teach this Novruz phrase."},
+      {icon:"📖", name:"Novruz Story Circle", desc:"Teacher reads/tells a story about a family celebrating Novruz. Students sequence pictures afterward."},
+      {icon:"🎨", name:"Novruz Card Making", desc:"Students create a Novruz greeting card and write inside: 'Happy Novruz! Spring is here!'"},
+    ]
+  },
+  {
+    id:12, phase:2, title:"Novruz Foods", goal:"food vocabulary",
+    production:"Shopping gap task; menu design",
+    homework:"Ask your parent what Novruz food they are making. Write the ingredients in English.",
+    flashcards:[
+      {en:"Pakhlava", az:"Paxlava"},
+      {en:"Shekerbura", az:"Şəkərbura"},
+      {en:"Rice", az:"Düyü"},
+      {en:"Eggs", az:"Yumurtalar"},
+      {en:"Sweet", az:"Şirin"},
+      {en:"Delicious", az:"Dadlı"},
+      {en:"I want / I would like", az:"İstəyirəm"},
+      {en:"How much is it?", az:"Bu nə qədərdir?"},
+      {en:"Nuts", az:"Qoz-fındıq"},
+    ],
+    resources:[
+      {icon:"🃏", type:"Flashcard App", name:"Novruz Foods Quizlet", desc:"Food vocabulary for Novruz sweets", url:"https://quizlet.com/search?query=novruz+food&type=sets"},
+      {icon:"🎬", type:"Video", name:"Making Pakhlava", desc:"Simple video showing pakhlava making", url:"https://www.youtube.com/results?search_query=pakhlava+making+azerbaijani"},
+      {icon:"🖨️", type:"Printable", name:"Novruz Menu Template", desc:"Design a Novruz feast menu", url:"#"},
+      {icon:"🛒", type:"Activity", name:"Shopping Role-Play Cards", desc:"Price tags and food picture cards", url:"#"},
+      {icon:"📝", type:"Worksheet", name:"Food Vocabulary Match", desc:"Match food names to pictures", url:"https://www.eslkidstuff.com/lesson-plans/food.html"},
+    ],
+    activities:[
+      {icon:"🛒", name:"Novruz Market Role-Play", desc:"Set up a 'Novruz market' with picture cards and price tags. Students shop: 'I would like 2 pakhlava please. How much is it?'"},
+      {icon:"📋", name:"Menu Design", desc:"Students design a Novruz feast menu with prices, drawings, and descriptions."},
+      {icon:"🍽️", name:"My Favorite Novruz Food", desc:"Students describe their favorite Novruz food: 'I love pakhlava. It is sweet and delicious.'"},
+    ]
+  },
+  {
+    id:13, phase:2, title:"My Favorite Azerbaijani Dish", goal:"food preferences",
+    production:"Recipe storytelling; food poster",
+    homework:"Write a simple recipe for your favorite dish (3-4 steps in English).",
+    flashcards:[
+      {en:"Plov (rice dish)", az:"Plov"},
+      {en:"Dolma", az:"Dolma"},
+      {en:"Qutab", az:"Qutab"},
+      {en:"Soup (Piti)", az:"Piti"},
+      {en:"First, then, finally", az:"Əvvəlcə, sonra, nəhayət"},
+      {en:"Ingredients", az:"İnqrediyentlər"},
+      {en:"Cook / Boil / Mix", az:"Bişirmək / Qaynatmaq / Qarışdırmaq"},
+      {en:"My favorite food is", az:"Ən sevimli yeməyim"},
+    ],
+    resources:[
+      {icon:"🃏", type:"Flashcard App", name:"Azerbaijani Food Vocabulary", desc:"Traditional dishes and cooking words", url:"https://quizlet.com/search?query=azerbaijani+food&type=sets"},
+      {icon:"🎬", type:"Video", name:"Azerbaijani Cuisine Guide", desc:"Short cultural video about local food", url:"https://www.youtube.com/results?search_query=azerbaijani+cuisine+for+kids"},
+      {icon:"🖨️", type:"Printable", name:"My Recipe Book Page", desc:"Template for writing a simple recipe", url:"#"},
+      {icon:"🖼️", type:"Craft", name:"Food Poster Project", desc:"Draw and label a dish with ingredients", url:"#"},
+      {icon:"📊", type:"Activity", name:"Class Food Survey", desc:"'What is your favorite Azerbaijani dish?'", url:"#"},
+    ],
+    activities:[
+      {icon:"👨‍🍳", name:"Recipe Story", desc:"Students tell their dish as a story: 'First, we need rice. Then, we add butter. Finally, we eat!'"},
+      {icon:"🗳️", name:"Favorite Food Vote", desc:"Class votes on their favorite Azerbaijani dish. Create a bar chart of results."},
+      {icon:"🖼️", name:"Restaurant Menu", desc:"Students design a poster for an imaginary Azerbaijani restaurant with prices and descriptions."},
+    ]
+  },
+  {
+    id:14, phase:2, title:"Markets and Shopping", goal:"questions and requests",
+    production:"Role-play market dialogues",
+    homework:"Write a shopping dialogue (A: seller, B: buyer) with at least 6 lines.",
+    flashcards:[
+      {en:"How much is this?", az:"Bu nə qədərdir?"},
+      {en:"I'd like to buy...", az:"Almaq istəyirəm..."},
+      {en:"Do you have...?", az:"Sizdə...var?"},
+      {en:"Yes / No", az:"Bəli / Xeyr"},
+      {en:"Too expensive", az:"Çox bahadır"},
+      {en:"I'll take it", az:"Götürürəm"},
+      {en:"Change / Money", az:"Sükur / Pul"},
+      {en:"Market / Shop", az:"Bazar / Mağaza"},
+    ],
+    resources:[
+      {icon:"🃏", type:"Flashcard App", name:"Shopping Vocabulary Quizlet", desc:"Money, shopping phrases deck", url:"https://quizlet.com/subject/shopping-english/"},
+      {icon:"🎬", type:"Video", name:"At the Market – ESL Dialogue", desc:"Model shopping conversation video", url:"https://www.youtube.com/results?search_query=shopping+dialogue+ESL+kids"},
+      {icon:"🖨️", type:"Printable", name:"Play Money Sheets", desc:"Printable Azerbaijani manat play money", url:"#"},
+      {icon:"🛒", type:"Activity", name:"Classroom Market Setup", desc:"Use flashcard items as goods for sale", url:"#"},
+      {icon:"🎮", type:"Game", name:"Price Tag Guessing", desc:"Students guess prices of common items", url:"#"},
+    ],
+    activities:[
+      {icon:"🛍️", name:"Classroom Market", desc:"Set up shop stations. Students rotate as buyers and sellers. Use play money (manat). Each transaction must use target phrases."},
+      {icon:"🎭", name:"Role-Play Skits", desc:"Pairs write and perform a 6-line market dialogue. Teacher provides a scaffold model."},
+      {icon:"📊", name:"Price Comparison", desc:"Students compare prices: 'The apple costs 50 qəpik. The book costs 2 manat. The book is more expensive.'"},
+    ]
+  },
+  {
+    id:15, phase:2, title:"Places in Baku", goal:"local places vocabulary",
+    production:"Tourist map task; tourist leaflet",
+    homework:"Draw a map of your neighborhood and label 5 places in English.",
+    flashcards:[
+      {en:"Old City (İçərişəhər)", az:"İçərişəhər"},
+      {en:"Flame Towers", az:"Alov Qüllələri"},
+      {en:"Boulevard", az:"Bulvar"},
+      {en:"Park", az:"Park"},
+      {en:"Museum", az:"Muzey"},
+      {en:"School", az:"Məktəb"},
+      {en:"Hospital", az:"Xəstəxana"},
+      {en:"Turn left / right", az:"Sola / Sağa dön"},
+      {en:"Go straight", az:"Düz get"},
+      {en:"It is near...", az:"O...yanındadır"},
+    ],
+    resources:[
+      {icon:"🗺️", type:"Map", name:"Baku City Map (Google Maps)", desc:"Interactive map of central Baku", url:"https://maps.google.com/?q=Baku,Azerbaijan"},
+      {icon:"🎬", type:"Video", name:"Baku City Tour Video", desc:"Short Baku tourism video for kids", url:"https://www.youtube.com/results?search_query=Baku+Azerbaijan+city+tour"},
+      {icon:"🖨️", type:"Printable", name:"Simple Baku Map Worksheet", desc:"Blank map to label famous landmarks", url:"#"},
+      {icon:"✂️", type:"Craft", name:"Tourist Leaflet Template", desc:"Fold-out brochure template", url:"#"},
+      {icon:"🎮", type:"Game", name:"Directions Treasure Hunt", desc:"Give directions around the school", url:"#"},
+      {icon:"🃏", type:"Flashcard App", name:"Baku Landmarks Set", desc:"Famous Baku places flashcard deck", url:"https://quizlet.com/search?query=baku+landmarks&type=sets"},
+    ],
+    activities:[
+      {icon:"🗺️", name:"Tourist Map Task", desc:"Students work in pairs to create a simple tourist map of Baku with 6 labeled places and speech bubbles."},
+      {icon:"🧭", name:"Directions Role-Play", desc:"'Excuse me, where is the boulevard?' Students give directions using left/right/straight."},
+      {icon:"📰", name:"Tourist Leaflet", desc:"Fold A4 paper into 3 panels. Students illustrate and write about 3 famous Baku places."},
+    ]
+  },
+  {
+    id:16, phase:2, title:"What Can You Do?", goal:"can/can't",
+    production:"Talent show interviews",
+    homework:"Write 5 things you can do and 2 things you can't do yet.",
+    flashcards:[
+      {en:"I can swim", az:"Mən üzə bilirəm"},
+      {en:"I can't fly", az:"Mən uça bilmirəm"},
+      {en:"Can you...?", az:"Sən... bilirsinmi?"},
+      {en:"Yes, I can!", az:"Bəli, bacara bilirəm!"},
+      {en:"No, I can't", az:"Xeyr, bacarmıram"},
+      {en:"Draw / Sing / Dance", az:"Çizmək / Oxumaq / Rəqs etmək"},
+      {en:"Play guitar", az:"Gitara çalmaq"},
+      {en:"Cook / Read fast", az:"Bişirmək / Sürətli oxumaq"},
+    ],
+    resources:[
+      {icon:"🃏", type:"Flashcard App", name:"Can/Can't Quizlet", desc:"Ability modal verb vocabulary set", url:"https://quizlet.com/subject/can-cant-abilities/"},
+      {icon:"🎬", type:"Video", name:"I Can Song for Kids", desc:"Song about abilities using can", url:"https://www.youtube.com/results?search_query=I+can+ESL+song+kids"},
+      {icon:"🖨️", type:"Printable", name:"Ability Survey Worksheet", desc:"Class survey: who can do what?", url:"#"},
+      {icon:"🎤", type:"Activity", name:"Talent Show Script", desc:"Interview scaffold card for talent show", url:"#"},
+      {icon:"🎮", type:"Game", name:"Can You? Speed Round", desc:"Rapid-fire yes/no ability questions", url:"#"},
+    ],
+    activities:[
+      {icon:"🎤", name:"Talent Show", desc:"Students prepare a 30-second talent show intro: 'Hello! My name is ___. I can ___. I also can ___. I love to ___!'"},
+      {icon:"📋", name:"Ability Survey", desc:"Students interview 5 classmates and fill in: 'Can [name] swim? Yes/No.' Share results."},
+      {icon:"🎯", name:"Can/Can't Charades", desc:"Act out an ability (mime swimming, singing, etc). Class guesses: 'She can swim!'"},
+    ]
+  },
+  {
+    id:17, phase:2, title:"Sports and Games", goal:"abilities and sports",
+    production:"Survey classmates; chart results",
+    homework:"Write about your favorite sport and explain why you like it.",
+    flashcards:[
+      {en:"Football / Soccer", az:"Futbol"},
+      {en:"Basketball", az:"Basketbol"},
+      {en:"Swimming", az:"Üzgüçülük"},
+      {en:"Running", az:"Qaçış"},
+      {en:"Chess", az:"Şahmat"},
+      {en:"I play / I do", az:"Oynayıram / Edirəm"},
+      {en:"I'm good at", az:"Mən ... yaxşıyam"},
+      {en:"Sport is fun / healthy", az:"İdman əyləncəlidir / sağlamdır"},
+    ],
+    resources:[
+      {icon:"🃏", type:"Flashcard App", name:"Sports Vocabulary Quizlet", desc:"Sports and activities vocab deck", url:"https://quizlet.com/subject/sports-english/"},
+      {icon:"🎬", type:"Video", name:"Sports Song for Kids", desc:"ESL sports vocabulary song", url:"https://www.youtube.com/results?search_query=sports+song+for+kids+ESL"},
+      {icon:"🖨️", type:"Printable", name:"Sports Survey Sheet", desc:"Tally chart for class sports survey", url:"#"},
+      {icon:"📊", type:"Activity", name:"Bar Chart Template", desc:"Graph paper for charting survey results", url:"#"},
+      {icon:"🎮", type:"Game", name:"Sports Pictionary", desc:"Draw a sport, class guesses", url:"#"},
+    ],
+    activities:[
+      {icon:"📊", name:"Sports Survey", desc:"Students ask: 'Do you like football? Can you swim?' Tally results and create a class bar chart."},
+      {icon:"🎨", name:"Sports Pictionary", desc:"Students draw a sport silently. First to call out the correct English word wins a point."},
+      {icon:"🏆", name:"My Sports Hero", desc:"Students speak for 30 seconds about a Azerbaijani sports hero they admire."},
+    ]
+  },
+  {
+    id:18, phase:2, title:"My Week", goal:"adverbs of frequency",
+    production:"Routine story; weekly planner",
+    homework:"Fill in your real weekly planner with activities in English.",
+    flashcards:[
+      {en:"Always", az:"Həmişə"},
+      {en:"Usually", az:"Adətən"},
+      {en:"Sometimes", az:"Bəzən"},
+      {en:"Never", az:"Heç vaxt"},
+      {en:"Every day", az:"Hər gün"},
+      {en:"Monday–Sunday", az:"Bazar ertəsi – Bazar"},
+      {en:"I always eat breakfast", az:"Həmişə səhər yeməyi yeyirəm"},
+      {en:"I never wake up late", az:"Heç vaxt gec oyanmıram"},
+    ],
+    resources:[
+      {icon:"🃏", type:"Flashcard App", name:"Adverbs of Frequency Quizlet", desc:"Always/usually/sometimes/never deck", url:"https://quizlet.com/subject/adverbs-of-frequency/"},
+      {icon:"🎬", type:"Video", name:"Daily Routine Song", desc:"What do you do every day? song", url:"https://www.youtube.com/results?search_query=daily+routine+song+ESL+kids"},
+      {icon:"🖨️", type:"Printable", name:"Weekly Planner Template", desc:"Illustrated weekly schedule printout", url:"https://www.twinkl.com/search?q=weekly+planner+kids"},
+      {icon:"📝", type:"Worksheet", name:"Frequency Adverbs WS", desc:"Fill in the blanks with frequency words", url:"#"},
+      {icon:"🎮", type:"Game", name:"True or False Routine Quiz", desc:"Teacher reads, students True/False with cards", url:"#"},
+    ],
+    activities:[
+      {icon:"🗓️", name:"Weekly Planner", desc:"Students fill in a weekly planner template with their activities. Then report: 'I always go to school. I sometimes play football.'"},
+      {icon:"📖", name:"My Routine Story", desc:"Write a story: 'On Monday I always...On Wednesday I usually...On Sunday I never...'"},
+      {icon:"🔄", name:"Find Someone Who...", desc:"Mingle activity: 'Find someone who always eats breakfast. Find someone who never wakes up late.'"},
+    ]
+  },
+  {
+    id:19, phase:2, title:"Around Azerbaijan", goal:"places and culture",
+    production:"Travel brochure project",
+    homework:"Research one Azerbaijani city and write 3 facts about it.",
+    flashcards:[
+      {en:"Sheki", az:"Şəki"},
+      {en:"Gabala", az:"Qəbələ"},
+      {en:"Mountain / Forest", az:"Dağ / Meşə"},
+      {en:"Ancient / Old", az:"Qədim"},
+      {en:"Beautiful / Amazing", az:"Gözəl / Heyrətamiz"},
+      {en:"You should visit", az:"Ziyarət etməlisiniz"},
+      {en:"It is famous for", az:"O ... ilə məşhurdur"},
+      {en:"In the north / south", az:"Şimalda / Cənubda"},
+    ],
+    resources:[
+      {icon:"🗺️", type:"Map", name:"Azerbaijan Map (Google Maps)", desc:"Interactive map of Azerbaijan", url:"https://maps.google.com/?q=Azerbaijan"},
+      {icon:"🎬", type:"Video", name:"Azerbaijan Travel Documentary", desc:"Beautiful Azerbaijan for kids video", url:"https://www.youtube.com/results?search_query=Azerbaijan+travel+documentary"},
+      {icon:"🖨️", type:"Printable", name:"Travel Brochure Template", desc:"Tri-fold brochure for a city project", url:"#"},
+      {icon:"🃏", type:"Flashcard App", name:"Azerbaijan Regions Quizlet", desc:"Cities and regions vocabulary", url:"https://quizlet.com/search?query=azerbaijan+cities&type=sets"},
+      {icon:"✂️", type:"Craft", name:"Postcard from Azerbaijan", desc:"Design a postcard from a chosen city", url:"#"},
+    ],
+    activities:[
+      {icon:"🗺️", name:"Azerbaijan Map Tour", desc:"Point to cities on the map. Students say the name and one fact: 'Sheki is in the north. It is beautiful.'"},
+      {icon:"📰", name:"Travel Brochure", desc:"Students create a tri-fold brochure for a city of their choice with drawings and 3 English sentences per panel."},
+      {icon:"🎤", name:"City Pitch", desc:"30-second spoken pitch: 'Please visit [city]! It is famous for... You should see...'"},
+    ]
+  },
+  {
+    id:20, phase:2, title:"Traditions Festival", goal:"review & celebration",
+    production:"Class exhibition and presentations",
+    homework:"Write a reflection: 'The most interesting tradition I learned about is...'",
+    flashcards:[
+      {en:"Festival", az:"Festival"},
+      {en:"Tradition", az:"Ənənə"},
+      {en:"I learned that...", az:"Öyrəndim ki..."},
+      {en:"My favorite was...", az:"Ən sevdiyim ..."},
+      {en:"Let me show you", az:"Sizi göstəreyim"},
+      {en:"We are proud of", az:"Fəxr edirik"},
+    ],
+    resources:[
+      {icon:"🎊", type:"Activity", name:"Traditions Exhibition Setup", desc:"Display guidelines and station cards", url:"#"},
+      {icon:"🖨️", type:"Printable", name:"Reflection Sheet", desc:"Unit review self-assessment form", url:"#"},
+      {icon:"🏆", type:"Activity", name:"Phase 2 Certificates", desc:"Print achievement certificates", url:"https://www.twinkl.com/search?q=certificate+achievement"},
+      {icon:"📸", type:"Activity", name:"Class Photo Booth", desc:"Traditions theme photo corner", url:"#"},
+    ],
+    activities:[
+      {icon:"🖼️", name:"Class Exhibition", desc:"Students display all Phase 2 work. Each student stands by their work and explains it to visiting classmates."},
+      {icon:"🌟", name:"Best Moment Award", desc:"Class votes on 'Most Creative Brochure', 'Best Market Actor', etc."},
+      {icon:"📝", name:"Reflection Writing", desc:"'In Phase 2 I learned... My favorite lesson was... I want to learn more about...'"},
+    ]
+  },
+  // PHASE 3
+  {
+    id:21, phase:3, title:"A Strange Day", goal:"past be (was/were)",
+    production:"Funny story reconstruction",
+    homework:"Write about a strange day you had. Use 'was' and 'were' at least 5 times.",
+    flashcards:[
+      {en:"It was...", az:"O... idi"},
+      {en:"There was / were", az:"... vardı / var idi"},
+      {en:"Yesterday", az:"Dünən"},
+      {en:"Strange / Weird", az:"Qəribə"},
+      {en:"I was happy / sad", az:"Xoşbəxt / Kədərli idim"},
+      {en:"Where were you?", az:"Sən harada idin?"},
+      {en:"It was a long time ago", az:"Bu çox vaxt əvvəl idi"},
+    ],
+    resources:[
+      {icon:"🃏", type:"Flashcard App", name:"Past Be Quizlet", desc:"Was/were grammar practice deck", url:"https://quizlet.com/subject/past-simple-be/"},
+      {icon:"🎬", type:"Video", name:"Was and Were Grammar Song", desc:"Song for past simple be forms", url:"https://www.youtube.com/results?search_query=was+were+grammar+song+kids"},
+      {icon:"🖨️", type:"Printable", name:"Strange Day Story Scaffold", desc:"Fill-in-the-blanks story template", url:"#"},
+      {icon:"🎮", type:"Game", name:"Memory Was/Were Quiz", desc:"Remember and describe a past scene", url:"#"},
+      {icon:"📖", type:"Activity", name:"Story Reconstruction Cards", desc:"Jumbled story sentences to order", url:"#"},
+    ],
+    activities:[
+      {icon:"📖", name:"Funny Story Reconstruction", desc:"Cut up a funny story into sentences. Pairs race to put the story in order, then retell it using was/were."},
+      {icon:"🎨", name:"Comic Strip", desc:"Students draw a 4-panel comic strip of a strange day. Add speech bubbles and captions using past be."},
+      {icon:"🎭", name:"What Was It?", desc:"Teacher mimes a strange scene (was on a flying carpet, was in a forest of candy). Students ask yes/no questions: 'Were you inside?' 'Was it hot?'"},
+    ]
+  },
+  {
+    id:22, phase:3, title:"Lost in a Story", goal:"story sequencing",
+    production:"Comic strip creation",
+    homework:"Continue the class story at home – add 3 more sentences for what happens next.",
+    flashcards:[
+      {en:"First", az:"Əvvəlcə"},
+      {en:"Then / Next", az:"Sonra"},
+      {en:"After that", az:"Bundan sonra"},
+      {en:"Finally", az:"Nəhayət"},
+      {en:"One day", az:"Bir gün"},
+      {en:"Suddenly", az:"Qəfildən"},
+      {en:"In the end", az:"Sonda"},
+      {en:"Beginning / Middle / End", az:"Əvvəl / Orta / Son"},
+    ],
+    resources:[
+      {icon:"🃏", type:"Flashcard App", name:"Story Connectors Quizlet", desc:"Sequencing words flashcard deck", url:"https://quizlet.com/subject/story-connectors/"},
+      {icon:"🖨️", type:"Printable", name:"Comic Strip Template", desc:"6-panel blank comic strip printout", url:"https://www.twinkl.com/search?q=comic+strip+template"},
+      {icon:"🎬", type:"Video", name:"Story Structure for Kids", desc:"Beginning, middle, end explanation", url:"https://www.youtube.com/results?search_query=story+structure+beginning+middle+end+kids"},
+      {icon:"📖", type:"Activity", name:"Story Dice", desc:"Roll dice with story elements, create a tale", url:"#"},
+      {icon:"🎮", type:"Game", name:"Sequencing Race", desc:"Race to put story pictures in order", url:"#"},
+    ],
+    activities:[
+      {icon:"🎲", name:"Story Dice", desc:"Roll 3 dice (character, place, problem). Students build a 5-sentence story using: First... Then... Finally..."},
+      {icon:"🖼️", name:"Comic Strip", desc:"Students get 4 random picture cards and create a comic strip story, writing 1-2 sentences per panel."},
+      {icon:"📖", name:"Shared Story Chain", desc:"Each student adds one sentence to a class story. Use story connectors as the chain links."},
+    ]
+  },
+  {
+    id:23, phase:3, title:"Talking Animals", goal:"dialogue and imagination",
+    production:"Role-play animal conversations",
+    homework:"Write a dialogue between 2 animals. At least 8 lines.",
+    flashcards:[
+      {en:"What do you think?", az:"Sən nə düşünürsən?"},
+      {en:"I think that...", az:"Düşünürəm ki..."},
+      {en:"Maybe / Perhaps", az:"Bəlkə"},
+      {en:"Because", az:"Çünki"},
+      {en:"Let's go / Let's eat", az:"Gedək / Yeyək"},
+      {en:"I agree / I disagree", az:"Razıyam / Razı deyiləm"},
+      {en:"Good idea!", az:"Yaxşı fikir!"},
+      {en:"Oh no! / Wow!", az:"Xeyr! / Vay!"},
+    ],
+    resources:[
+      {icon:"🃏", type:"Flashcard App", name:"Dialogue Phrases Quizlet", desc:"Conversation starters and responses", url:"https://quizlet.com/subject/conversation-phrases/"},
+      {icon:"🖨️", type:"Printable", name:"Animal Dialogue Template", desc:"Scaffold for writing animal conversations", url:"#"},
+      {icon:"✂️", type:"Craft", name:"Paper Bag Puppets", desc:"Make animal puppets for the dialogue", url:"#"},
+      {icon:"🎭", type:"Activity", name:"Puppet Show Stage", desc:"Use a cardboard box as a puppet theater", url:"#"},
+      {icon:"📖", type:"Story", name:"Animals Can Talk! Starter Story", desc:"Model dialogue story read-aloud", url:"#"},
+    ],
+    activities:[
+      {icon:"🐻", name:"Puppet Show", desc:"Students make paper bag puppets of their chosen animal, then perform a 6-line conversation for the class."},
+      {icon:"🎭", name:"Freeze Frame", desc:"Students act out an animal scene. Teacher shouts 'Freeze!' Students must explain in English what their animal was saying."},
+      {icon:"✍️", name:"Dialogue Writing", desc:"Scaffold: A=[Animal 1]: '...' B=[Animal 2]: 'Oh! Because...' A: 'Let's...' B: 'Great idea!'"},
+    ]
+  },
+  {
+    id:24, phase:3, title:"Bizarre Problems", goal:"creative thinking & language",
+    production:"Group problem-solving challenges",
+    homework:"Invent 1 bizarre problem and write 3 possible solutions in English.",
+    flashcards:[
+      {en:"Problem", az:"Problem"},
+      {en:"Solution", az:"Həll"},
+      {en:"We can / We could", az:"Biz edə bilərik"},
+      {en:"What if...?", az:"Əgər... olsa?"},
+      {en:"The best idea is", az:"Ən yaxşı fikir"},
+      {en:"I have an idea!", az:"Bir fikrim var!"},
+      {en:"It won't work because", az:"İşləməyəcək, çünki"},
+      {en:"Let's try", az:"Cəhd edək"},
+    ],
+    resources:[
+      {icon:"🃏", type:"Flashcard App", name:"Problem-Solving Language", desc:"Useful phrases for discussions", url:"#"},
+      {icon:"🖨️", type:"Printable", name:"Bizarre Problem Cards", desc:"Funny scenario cards (e.g. 'Your shoes can talk!')", url:"#"},
+      {icon:"🎮", type:"Game", name:"Would You Rather?", desc:"Forced-choice creative dilemmas", url:"#"},
+      {icon:"🧠", type:"Activity", name:"Mind Map Templates", desc:"Graphic organizer for solutions", url:"#"},
+      {icon:"📖", type:"Activity", name:"What Would You Do?", desc:"Class discussion with picture scenarios", url:"#"},
+    ],
+    activities:[
+      {icon:"🤔", name:"Bizarre Problem Cards", desc:"Each group picks a card: 'You wake up and everyone is speaking backwards!' Groups brainstorm 3 solutions and present."},
+      {icon:"🗳️", name:"Best Solution Vote", desc:"Each group presents their best solution. Class votes. Winning group explains why theirs is best."},
+      {icon:"🎭", name:"Problem Drama", desc:"Groups act out the bizarre problem + solution as a short 60-second skit."},
+    ]
+  },
+  {
+    id:25, phase:3, title:"Heroes and Helpers", goal:"story character language",
+    production:"Character profile writing",
+    homework:"Write a character profile for your own invented hero.",
+    flashcards:[
+      {en:"Hero / Villain", az:"Qəhrəman / Bədxah"},
+      {en:"Brave / Strong / Clever", az:"Cəsur / Güclü / Ağıllı"},
+      {en:"Super power", az:"Super güc"},
+      {en:"He/She helps", az:"O kömək edir"},
+      {en:"In the story...", az:"Hekayədə..."},
+      {en:"The hero saves", az:"Qəhrəman xilas edir"},
+      {en:"Good vs. Evil", az:"Yaxşı vs. Pis"},
+      {en:"In the end, good wins", az:"Sonda yaxşılıq qalib gəlir"},
+    ],
+    resources:[
+      {icon:"🃏", type:"Flashcard App", name:"Character Adjectives Quizlet", desc:"Adjectives for story characters", url:"https://quizlet.com/subject/character-adjectives/"},
+      {icon:"🖨️", type:"Printable", name:"Hero Profile Template", desc:"Character profile with name, powers, and description", url:"https://www.twinkl.com/search?q=character+profile+template"},
+      {icon:"🎬", type:"Video", name:"What Makes a Hero?", desc:"Simple story structure with hero's journey", url:"https://www.youtube.com/results?search_query=what+makes+a+hero+kids"},
+      {icon:"✂️", type:"Craft", name:"Hero Cape / Mask Craft", desc:"Paper cape and mask for hero role-play", url:"#"},
+      {icon:"📖", type:"Activity", name:"Hero Story Starters", desc:"First lines to continue: 'One day a hero named...'", url:"#"},
+    ],
+    activities:[
+      {icon:"🦸", name:"Hero Profile", desc:"Students complete a profile: Name, Powers, Weakness, Mission, Appearance. Then present as if they ARE the hero."},
+      {icon:"⚔️", name:"Hero vs. Villain Debate", desc:"Pairs: one plays the hero, one the villain. Each argues why they should win. Class votes."},
+      {icon:"📖", name:"Story Beginning", desc:"Using their hero, students write the opening scene: 'One day in Baku, my hero was...'"},
+    ]
+  },
+  {
+    id:26, phase:3, title:"Dream Machines", goal:"innovation and invention language",
+    production:"Invent and describe a machine",
+    homework:"Draw your dream machine and write 5 sentences describing what it does.",
+    flashcards:[
+      {en:"Machine / Robot / Device", az:"Maşın / Robot / Cihaz"},
+      {en:"It can do...", az:"O... edə bilər"},
+      {en:"It works by...", az:"O... vasitəsilə işləyir"},
+      {en:"My invention is called", az:"Mənim ixtiraya ... deyilir"},
+      {en:"It helps people to", az:"İnsanlara... kömək edir"},
+      {en:"Fast / Automatic", az:"Sürətli / Avtomatik"},
+      {en:"Button / Wheel / Screen", az:"Düymə / Çarx / Ekran"},
+    ],
+    resources:[
+      {icon:"🖨️", type:"Printable", name:"Invention Blueprint Template", desc:"Technical drawing template for a machine", url:"#"},
+      {icon:"🎬", type:"Video", name:"Famous Inventions for Kids", desc:"Short video about how inventions help people", url:"https://www.youtube.com/results?search_query=famous+inventions+kids"},
+      {icon:"📝", type:"Worksheet", name:"Invention Description Scaffold", desc:"'My machine is called... It can... It helps...'", url:"#"},
+      {icon:"🏆", type:"Activity", name:"Dragon's Den Pitch Format", desc:"Simple 1-minute invention pitch script", url:"#"},
+      {icon:"🎮", type:"Game", name:"What Does It Do?", desc:"Students describe a mystery machine, class guesses", url:"#"},
+    ],
+    activities:[
+      {icon:"⚙️", name:"Blueprint Design", desc:"Students draw their dream machine on a 'blueprint' template with labeled parts and arrows."},
+      {icon:"🎤", name:"Dragon's Den Pitch", desc:"60-second pitch to the class: 'My invention is called the ___. It can ___. It helps people ___. It costs ___.'"},
+      {icon:"🏆", name:"Best Invention Vote", desc:"Class votes on: Most useful / Most creative / Most funny invention. Winners awarded."},
+    ]
+  },
+  {
+    id:27, phase:3, title:"My Future Dream", goal:"future aspirations (want to / going to)",
+    production:"Vision board and speech",
+    homework:"Write a 'Letter to My Future Self' in English.",
+    flashcards:[
+      {en:"I want to be...", az:"... olmaq istəyirəm"},
+      {en:"I'm going to...", az:"Mən... edəcəyəm"},
+      {en:"In the future", az:"Gələcəkdə"},
+      {en:"My dream is to", az:"Arzum... etməkdir"},
+      {en:"Doctor / Engineer / Artist", az:"Həkim / Mühəndis / Rəssam"},
+      {en:"I will help people", az:"İnsanlara kömək edəcəyəm"},
+      {en:"When I grow up", az:"Böyüyəndə"},
+    ],
+    resources:[
+      {icon:"🃏", type:"Flashcard App", name:"Jobs & Careers Quizlet", desc:"Jobs vocabulary for young learners", url:"https://quizlet.com/subject/jobs-careers-english/"},
+      {icon:"🖨️", type:"Printable", name:"Vision Board Template", desc:"Illustrated career vision board printout", url:"#"},
+      {icon:"🎬", type:"Video", name:"What Do You Want to Be?", desc:"Kids talk about their future dreams", url:"https://www.youtube.com/results?search_query=what+do+you+want+to+be+when+you+grow+up+kids"},
+      {icon:"📝", type:"Template", name:"Letter to My Future Self", desc:"Guided letter writing template", url:"#"},
+      {icon:"🎤", type:"Activity", name:"Future Speech Script", desc:"Scaffold for 1-minute speech about dreams", url:"#"},
+    ],
+    activities:[
+      {icon:"🖼️", name:"Vision Board", desc:"Students cut (or draw) images representing their future: job, home, hobbies. Add 5 labels in English."},
+      {icon:"🎤", name:"Future Speech", desc:"60-second speech: 'In the future, I want to be a ___. I'm going to ___. I will help ___ because...'"},
+      {icon:"✉️", name:"Letter to Future Self", desc:"Write a letter to themselves 10 years from now. Sealed in an envelope to open in the future."},
+    ]
+  },
+  {
+    id:28, phase:3, title:"Writing a Short Story", goal:"connectors (and, but, because, so)",
+    production:"Draft and illustrate story",
+    homework:"Edit your story draft – fix 3 things and add 2 more sentences.",
+    flashcards:[
+      {en:"And", az:"Və"},
+      {en:"But", az:"Amma"},
+      {en:"Because", az:"Çünki"},
+      {en:"So", az:"Odur ki"},
+      {en:"However", az:"Lakin"},
+      {en:"Although", az:"Baxmayaraq"},
+      {en:"For example", az:"Məsələn"},
+      {en:"In conclusion", az:"Nəticə etibarilə"},
+    ],
+    resources:[
+      {icon:"🃏", type:"Flashcard App", name:"Connectors Quizlet", desc:"Story connectors and conjunctions deck", url:"https://quizlet.com/subject/connectors-english/"},
+      {icon:"🖨️", type:"Printable", name:"Story Draft Template", desc:"4-part story structure template", url:"#"},
+      {icon:"📖", type:"Activity", name:"Model Story Analysis", desc:"Highlight connectors in a sample text", url:"#"},
+      {icon:"🎮", type:"Game", name:"Connector Challenge", desc:"Finish the sentence using the right connector", url:"#"},
+      {icon:"✂️", type:"Craft", name:"Illustrated Storybook", desc:"Fold A4 into 8-page mini storybook", url:"#"},
+    ],
+    activities:[
+      {icon:"✏️", name:"Story Draft Writing", desc:"Using a story scaffold: SETTING → PROBLEM → EVENTS → ENDING. Students write 8-10 sentences using connectors."},
+      {icon:"🔍", name:"Connector Hunt", desc:"Swap stories with a partner. Highlight all the connectors. Did they use and/but/because/so correctly?"},
+      {icon:"📚", name:"Mini Storybook", desc:"Students fold and cut A4 into an 8-page book. Write and illustrate their story."},
+    ]
+  },
+  {
+    id:29, phase:3, title:"Storytelling Festival", goal:"speaking fluency",
+    production:"Perform stories to the class",
+    homework:"Practice your story 3 times at home. Tell it to a family member.",
+    flashcards:[
+      {en:"Once upon a time", az:"Bir zamanlar"},
+      {en:"Long, long ago", az:"Çoxdan-çoxdan əvvəl"},
+      {en:"The end", az:"Son"},
+      {en:"Did you enjoy it?", az:"Bəyəndinizmi?"},
+      {en:"My story is about...", az:"Hekayəm... haqqındadır"},
+      {en:"Loud / Quiet / Fast / Slow", az:"Ucadan / Sakit / Sürətli / Yavaş"},
+      {en:"Look at me!", az:"Mənə baxın!"},
+    ],
+    resources:[
+      {icon:"🎤", type:"Activity", name:"Story Performance Rubric", desc:"Simple 4-point speaking rubric", url:"#"},
+      {icon:"🖨️", type:"Printable", name:"Story Planning Cards", desc:"Visual story map for planning a performance", url:"#"},
+      {icon:"🎬", type:"Video", name:"How to Tell a Story (Tips)", desc:"Performance tips for young storytellers", url:"https://www.youtube.com/results?search_query=storytelling+tips+for+kids"},
+      {icon:"🎊", type:"Activity", name:"Festival Decorations", desc:"Set up a storytelling stage in your classroom", url:"#"},
+      {icon:"🏅", type:"Activity", name:"Storytelling Certificates", desc:"Print storytelling achievement awards", url:"https://www.twinkl.com/search?q=storytelling+certificate"},
+    ],
+    activities:[
+      {icon:"🎤", name:"Storytelling Performances", desc:"Each student tells their story. Audience uses a simple peer feedback card: 'I liked... I heard the word...'"},
+      {icon:"⭐", name:"Peer Feedback", desc:"Audience writes one positive comment on a sticky note for each performer."},
+      {icon:"🏆", name:"Story Awards", desc:"Class votes on: Funniest Story / Most Exciting / Best Voice / Most Creative. Everyone gets a certificate."},
+    ]
+  },
+  {
+    id:30, phase:3, title:"My English Journey", goal:"reflection and celebration",
+    production:"Portfolio showcase and celebration",
+    homework:"Write a letter to next year's students telling them about this English course.",
+    flashcards:[
+      {en:"I have learned...", az:"Öyrəndim..."},
+      {en:"I am proud because", az:"Fəxr edirəm, çünki"},
+      {en:"My favorite lesson was", az:"Ən sevimli dərsim"},
+      {en:"I want to keep learning", az:"Öyrənməyə davam etmək istəyirəm"},
+      {en:"Thank you, teacher!", az:"Sağ ol, müəllim!"},
+      {en:"Well done, everyone!", az:"Hamınız əlasiniz!"},
+      {en:"See you next time!", az:"Növbəti dəfəyə qədər!"},
+    ],
+    resources:[
+      {icon:"📁", type:"Template", name:"Final Portfolio Checklist", desc:"Everything to include in the final portfolio", url:"#"},
+      {icon:"🎊", type:"Activity", name:"Celebration Decoration Ideas", desc:"How to set up a final celebration", url:"#"},
+      {icon:"🏆", type:"Printable", name:"Course Completion Certificates", desc:"Print beautiful completion certificates", url:"https://www.twinkl.com/search?q=course+completion+certificate"},
+      {icon:"📸", type:"Activity", name:"Memory Book Creation", desc:"Class memory book template", url:"#"},
+      {icon:"🎬", type:"Video", name:"End of Year Reflection Ideas", desc:"Creative ways to celebrate learning", url:"#"},
+    ],
+    activities:[
+      {icon:"🖼️", name:"Portfolio Gallery", desc:"Final gallery walk. All 30 lessons' best work displayed. Visitors (other teachers, parents?) invited."},
+      {icon:"🎤", name:"My English Journey Speech", desc:"Each student speaks for 45 seconds: 'I started knowing ___ English words. Now I know ___. My favorite lesson was...'"},
+      {icon:"🎊", name:"Celebration & Certificates", desc:"Teacher awards personalized certificates. Students write their letter to next year's class."},
+    ]
+  },
+];
+
+const phaseColors = { 1: 'phase1', 2: 'phase2', 3: 'phase3' };
+const phaseNames = { 1: 'Me & My People', 2: 'Azerbaijani Traditions', 3: 'Imagination & Stories' };
+const phaseBg = { 1: 'bg-p1', 2: 'bg-p2', 3: 'bg-p3' };
+const phaseTagColor = { 1: '#f4a623', 2: '#3fb950', 3: '#bc8cff' };
+
+function buildSidebar() {
+  const list = document.getElementById('lessonList');
+  let html = '';
+  [1,2,3].forEach(p => {
+    html += `<div class="phase-label p${p}">● ${phaseNames[p]}</div>`;
+    lessons.filter(l => l.phase === p).forEach(l => {
+      html += `<button class="lesson-btn" id="btn-${l.id}" onclick="loadLesson(${l.id-1})">
+        <span class="lesson-num">${l.id}</span>
+        <span class="lesson-title">${l.title}</span>
+      </button>`;
+    });
+  });
+  list.innerHTML = html;
+}
+
+function filterLessons() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  lessons.forEach(l => {
+    const btn = document.getElementById(`btn-${l.id}`);
+    if (btn) btn.style.display = (l.title.toLowerCase().includes(q) || l.goal.toLowerCase().includes(q)) ? '' : 'none';
+  });
+}
+
+function loadLesson(idx) {
+  const l = lessons[idx];
+  document.querySelectorAll('.lesson-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById(`btn-${l.id}`);
+  if (btn) btn.classList.add('active');
+
+  document.getElementById('welcomeScreen').style.display = 'none';
+  const lc = document.getElementById('lessonContent');
+  lc.style.display = 'block';
+
+  const pc = l.phase;
+  const pcolor = phaseTagColor[pc];
+
+  const flashHTML = l.flashcards.map(f => `
+    <div class="flashcard" title="Click to flip">
+      <div>
+        <strong>${f.en}</strong>
+        <span class="az">${f.az}</span>
+      </div>
+    </div>`).join('');
+
+  const resHTML = l.resources.map(r => `
+    <a class="resource-card" href="${r.url}" target="_blank">
+      <div class="resource-icon">${r.icon}</div>
+      <div class="resource-type">${r.type}</div>
+      <div class="resource-name">${r.name}</div>
+      <div class="resource-desc">${r.desc}</div>
+      <div class="resource-link">Open resource ↗</div>
+    </a>`).join('');
+
+  const actHTML = l.activities.map(a => `
+    <div class="activity-item">
+      <div class="activity-icon">${a.icon}</div>
+      <div>
+        <div class="activity-name">${a.name}</div>
+        <div class="activity-desc">${a.desc}</div>
+      </div>
+    </div>`).join('');
+
+  const noteKey = `lesson-note-${l.id}`;
+  const savedNote = localStorage.getItem(noteKey) || '';
+
+  lc.innerHTML = `
+    <div class="lesson-header">
+      <div class="lesson-num-big ${phaseBg[pc]}">${l.id}</div>
+      <div class="lesson-header-text">
+        <h2>${l.title}</h2>
+        <div class="lesson-meta">
+          <span class="tag goal">🎯 ${l.goal}</span>
+          <span class="tag cefr">CEFR A1–A2</span>
+          <span class="tag phase" style="border-color:${pcolor};color:${pcolor}">Phase ${pc}: ${phaseNames[pc]}</span>
+          <span class="tag">⏱ 60 min</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">Lesson Timeline</div>
+    <div class="timeline" style="margin-bottom:28px">
+      <div class="timeline-step step-warmup">
+        <div class="step-label">Warm-up</div>
+        <div class="step-time">10 min</div>
+        <div class="step-desc">Human Bank Account visualization linked to lesson theme.</div>
+      </div>
+      <div class="timeline-step step-present">
+        <div class="step-label">Presentation</div>
+        <div class="step-time">15 min</div>
+        <div class="step-desc">Teacher performs a story, poem, or dialogue. Students focus on meaning first.</div>
+      </div>
+      <div class="timeline-step step-practice">
+        <div class="step-label">Guided Practice</div>
+        <div class="step-time">15 min</div>
+        <div class="step-desc">Pair work, information-gap, survey, role-play, or matching task.</div>
+      </div>
+      <div class="timeline-step step-produce">
+        <div class="step-label">Production</div>
+        <div class="step-time">15 min</div>
+        <div class="step-desc">${l.production}</div>
+      </div>
+      <div class="timeline-step step-reflect">
+        <div class="step-label">Reflection</div>
+        <div class="step-time">5 min</div>
+        <div class="step-desc">'What new word did I learn? How confident did I feel?'</div>
+      </div>
+    </div>
+
+    <div class="section-title">🃏 Vocabulary Flashcards</div>
+    <div class="flashcard-preview">
+      <div style="font-size:13px;color:var(--muted);margin-bottom:10px">Hover to reveal the Azerbaijani translation</div>
+      <div class="flashcard-grid">${flashHTML}</div>
+    </div>
+
+    <div class="section-title">🔗 Teaching Resources</div>
+    <div class="resources-grid">${resHTML}</div>
+
+    <div class="section-title">💡 Activity Ideas</div>
+    <div class="activities">${actHTML}</div>
+
+    <div class="homework-box">
+      <h4>📚 Homework Extension</h4>
+      <p>${l.homework}</p>
+    </div>
+
+    <div class="section-title">📝 My Lesson Notes</div>
+    <textarea class="notes-area" placeholder="Write your lesson preparation notes here..." id="notepad-${l.id}" onchange="saveNote(${l.id})">${savedNote}</textarea>
+  `;
+
+  // Scroll top
+  document.getElementById('mainContent').scrollTop = 0;
+}
+
+function saveNote(id) {
+  const val = document.getElementById(`notepad-${id}`).value;
+  localStorage.setItem(`lesson-note-${id}`, val);
+}
+
+buildSidebar();
+</script>
+</body>
+</html>
